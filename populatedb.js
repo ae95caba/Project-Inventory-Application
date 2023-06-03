@@ -32,8 +32,8 @@ async function main() {
   console.log("Debug: About to connect");
   await mongoose.connect(mongoDB);
   console.log("Debug: Should be connected?");
-  await createBikes();
   await createCategories();
+  await createBikes();
 
   console.log("Debug: Closing mongoose");
   mongoose.connection.close();
@@ -68,7 +68,7 @@ async function categoryCreate(name, description, imgUrl) {
   });
 
   await category.save();
-  categories.push(category);
+  categories[category.name] = category;
   console.log(`Added category: ${name} `);
 }
 
@@ -105,13 +105,14 @@ async function createCategories() {
 
 async function createBikes() {
   console.log("Adding bikes");
+
   await Promise.all([
     bikeCreate(
       "Suzuki Gixxer GSX 150",
       5,
       "La Suzuki GSX 150cc es una motocicleta deportiva que combina un diseño elegante con un rendimiento excepcional. Con su motor de 150cc, ofrece potencia y aceleración emocionante, mientras que su chasis ligero y suspensión ajustable brindan una conducción cómoda y estable. Con frenos de disco, iluminación LED y un panel de instrumentos digital, esta moto es la combinación perfecta de estilo y funcionalidad.",
       1000000,
-      categories[2],
+      categories["Standard"],
       "https://motos0km.com.ar/models/suzuki-gsx-150-gixxer-gallery-1c5eab-120180925181322.jpg"
     ),
     bikeCreate(
@@ -119,7 +120,7 @@ async function createBikes() {
       3,
       "La Suzuki GN 125 es una motocicleta clásica y confiable que combina estilo y funcionalidad en un paquete compacto. Con su motor de 125cc, ofrece una conducción suave y eficiente, perfecta para moverse por la ciudad. Su diseño atemporal, con líneas elegantes y detalles cromados, le confiere un aspecto retro y atractivo. Además, cuenta con frenos de disco, suspensión cómoda y un asiento ergonómico, proporcionando comodidad y control en cada viaje. La Suzuki GN 125 es la opción ideal para aquellos que buscan una moto versátil y económica sin sacrificar el estilo clásico.",
       500000,
-      categories[2],
+      categories["Standard"],
       "https://motos0km.com.ar/models/suzuki-gn-125-f-gallery-ff0000-120180925180018.jpg"
     ),
     bikeCreate(
@@ -127,7 +128,7 @@ async function createBikes() {
       2,
       "La Gixxer SF 150 de Suzuki es una motocicleta deportiva de alto rendimiento con un diseño vanguardista y agresivo. Equipada con un motor de 150cc, ofrece una potencia emocionante y una aceleración rápida, brindando una experiencia de conducción emocionante. Su carenado aerodinámico y luces LED le dan un aspecto futurista y llamativo, mientras que su chasis ligero y suspensión ajustable proporcionan una conducción ágil y estable. Con frenos de disco y un panel de instrumentos digital, la Gixxer SF 150 combina estilo, rendimiento y funcionalidad en una motocicleta excepcional.",
       1500000,
-      categories[1],
+      categories["Sport bike"],
       "https://motomaniacs.pe/wp-content/uploads/GIXXER-SF-150-AZUL-1-768x512.webp"
     ),
   ]);

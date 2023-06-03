@@ -11,13 +11,13 @@ const BikeSchema = new Schema({
   img_url: { type: String, required: true },
   description: { type: String, required: true },
   price: { type: Number, required: true },
-  category: [{ type: Schema.Types.ObjectId, ref: "Category" }],
+  category: { type: Schema.Types.ObjectId, ref: "Category", required: true },
 });
 
 // Virtual for book's URL
 BikeSchema.virtual("url").get(function () {
   // We don't use an arrow function as we'll need the this object
-  return `catalog/motorcycles/${this._id}`;
+  return `/bike/${this._id}`;
   /* 	return `catalog/${this.category}/${this._id}`; */
 });
 
