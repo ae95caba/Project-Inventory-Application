@@ -1,4 +1,5 @@
 const Bike = require("../models/bike");
+const Category = require("../models/category");
 const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
 
@@ -31,58 +32,69 @@ exports.bike_detail = asyncHandler(async (req, res, next) => {
 
 // Display BookInstance create form on GET.
 exports.bike_create_get = asyncHandler(async (req, res, next) => {
-  const allBooks = await Book.find({}, "title").exec();
+  const allCategories = await Category.find({}, "name").exec();
 
-  res.render("bookinstance_form", {
-    title: "Create BookInstance",
-    book_list: allBooks,
+  res.render("bike_form", {
+    title: "Create Bike",
+    category_list: allCategories,
+    selected_category: undefined,
+    bike: undefined,
+    errors: undefined,
   });
 });
 
 // Handle BookInstance create on POST.
 exports.bike_create_post = [
   // Validate and sanitize fields.
-  body("book", "Book must be specified").trim().isLength({ min: 1 }).escape(),
-  body("imprint", "Imprint must be specified")
+  body("name", "Name must be specified").trim().isLength({ min: 1 }).escape(),
+  body("description", "Description must be specified")
     .trim()
     .isLength({ min: 1 })
     .escape(),
-  body("status").escape(),
-  body("due_back", "Invalid date")
-    .optional({ values: "falsy" })
-    .isISO8601()
-    .toDate(),
 
+  body("stock", "Stock must be specified").isNumeric(),
+  body("price", "Price must be specified").isNumeric(),
+  body("img_url", "Image url must be specified")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("category", "Category must be specified")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
   // Process request after validation and sanitization.
   asyncHandler(async (req, res, next) => {
     // Extract the validation errors from a request.
     const errors = validationResult(req);
 
     // Create a BookInstance object with escaped and trimmed data.
-    const bookInstance = new BookInstance({
-      book: req.body.book,
-      imprint: req.body.imprint,
-      status: req.body.status,
-      due_back: req.body.due_back,
+    const bike = new Bike({
+      name: req.body.name,
+      description: req.body.description,
+      number_in_stock: req.body.stock,
+      price: req.body.price,
+
+      category: req.body.category,
+      img_url: req.body.img_url,
     });
 
     if (!errors.isEmpty()) {
       // There are errors.
       // Render form again with sanitized values and error messages.
-      const allBooks = await Book.find({}, "title").exec();
+      const allCategories = await Category.find({}, "name").exec();
 
-      res.render("bookinstance_form", {
-        title: "Create BookInstance",
-        book_list: allBooks,
-        selected_book: bookInstance.book._id,
+      res.render("bike_form", {
+        title: "Create Bike",
+        category_list: allCategories,
+        selected_category: bike.category?._id,
         errors: errors.array(),
-        bookinstance: bookInstance,
+        bike: bike,
       });
       return;
     } else {
       // Data from form is valid
-      await bookInstance.save();
-      res.redirect(bookInstance.url);
+      await bike.save();
+      res.redirect(bike.url);
     }
   }),
 ];

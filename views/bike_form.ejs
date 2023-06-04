@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <p><%= title%></p>
+    <form method="post">
+      <input placeholder="name" name="name" value="<%= bike?.name %>" />
+      <select name="category" placeholder="category">
+        <option value="" disabled selected>Select an option</option>
+        <% category_list.forEach(function(category) { %>
+        <option
+          value="<%= category._id %>"
+          <% if (selected_category == category._id.toString()) { %>selected<% } %>
+        > <%=category.name%></option>
+
+        <% }); %>
+      </select>
+      <input placeholder="descriotion" name="description" value="<%= bike?.description %>" />
+      <input type="number" placeholder="price" name="price"  value="<%= bike?.price  %>"/>
+      <input type="number" placeholder="stock" name="stock" value="<%= bike?.number_in_stock %>" />
+      <input placeholder="image url" name="img_url"  value="<%= bike?.img_url %>" />
+      <button type="submit">Confirm</button>
+    </form>
+				<% if (errors && errors.length > 0) { %>
+  <ul>
+    <% errors.forEach(function(error) { %>
+      <li><%= error?.msg %></li>
+    <% }); %>
+  </ul>
+<% } %>
+
+
+  </body>
+</html>

@@ -9,10 +9,13 @@
   <body>
     <h1><%= title %></h1>
     <p>This is the <%= category.name %> category</p>
+    <p><%= category.description%></p>
+    <img src="<%= category.img_url %>" />
     <ul>
       <% category_bikes.forEach(function(bike) { %>
       <li><a href="<%= bike.url %>"><%= bike.name %></a></li>
       <% }); %>
     </ul>
+    <a href="/bike/create"><button>Add bike</button></a>
   </body>
 </html>

@@ -8,8 +8,11 @@
   </head>
   <body>
     <h1><%= title %></h1>
-    <p>This is the <%= bike.name %> bike</p>
-    <p><%= bike.description %></p>
-    <img src="<%= bike.img_url %>" />
+    <p>Welcome to <%= title %></p>
+    <ul>
+      <% bike_list.forEach(function(bike) { %>
+      <li><a href="<%= bike.url %>"><%= bike.name %></a></li>
+      <% }); %>
+    </ul>
   </body>
 </html>
