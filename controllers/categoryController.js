@@ -98,20 +98,20 @@ exports.category_create_post = [
 // Display Author delete form on GET.
 exports.category_delete_get = asyncHandler(async (req, res, next) => {
   // Get details of author and all their books (in parallel)
-  const [author, allBooksByAuthor] = await Promise.all([
-    Author.findById(req.params.id).exec(),
-    Book.find({ author: req.params.id }, "title summary").exec(),
+  const [category, allBikesInCategory] = await Promise.all([
+    Category.findById(req.params.id).exec(),
+    Bike.find({ category: req.params.id }, "name").exec(),
   ]);
 
-  if (author === null) {
+  if (category === null) {
     // No results.
-    res.redirect("/catalog/authors");
+    res.redirect("/categories");
   }
 
-  res.render("author_delete", {
-    title: "Delete Author",
-    author: author,
-    author_books: allBooksByAuthor,
+  res.render("category_delete", {
+    title: "Delete category",
+    category: category,
+    category_bikes: allBikesInCategory,
   });
 });
 

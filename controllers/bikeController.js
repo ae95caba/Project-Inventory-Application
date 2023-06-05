@@ -110,31 +110,25 @@ exports.bike_create_post = [
 // Display BookInstance delete form on GET.
 exports.bike_delete_get = asyncHandler(async (req, res, next) => {
   // Get details of book instance
-  const bookInstance = await BookInstance.findById(req.params.id).exec();
+  const bike = await Bike.findById(req.params.id).exec();
 
-  console.log(`el id the la instancia es : ${bookInstance}`);
-  console.log(`el id the la instancia es : ${bookInstance}`);
-
-  if (bookInstance === null) {
+  if (bike === null) {
     // No results.
     res.redirect("/catalog/bookinstances");
   }
 
-  res.render("bookinstance_delete", {
-    title: "Delete Book instance",
-
-    book_instance: bookInstance,
+  res.render("bike_delete", {
+    bike: bike,
   });
 });
 
 // Handle BookInstance delete on POST.
 exports.bike_delete_post = asyncHandler(async (req, res, next) => {
-  // Get details of book instances
-  const bookInstance = await BookInstance.findById(req.params.id).exec();
+  const errors = validationResult(req);
 
   //  Delete object and redirect to the list of books instances.
-  await BookInstance.findByIdAndRemove(req.body.book_instanceid);
-  res.redirect("/catalog/bookinstances");
+  await Bike.findByIdAndRemove(req.params.id);
+  res.redirect(`/category/${req.body.categoryid}`);
 });
 
 // Display bookinstance update form on GET.
