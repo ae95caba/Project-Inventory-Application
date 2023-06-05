@@ -8,9 +8,10 @@
     <h1><%= title %></h1>
     <p>Welcome to <%= title %></p>
     <ul>
-      <% categories.forEach(function(category) { %>
+      <% category_list.forEach(function(category) { %>
       <li><a href="<%= category.url %>"><%= category.name %></a></li>
       <% }); %>
     </ul>
+    <a href="category/create"><button>Create new</button></a>
   </body>
 </html>

@@ -18,7 +18,6 @@ const BikeSchema = new Schema({
 BikeSchema.virtual("url").get(function () {
   // We don't use an arrow function as we'll need the this object
   return `/bike/${this._id}`;
-  /* 	return `catalog/${this.category}/${this._id}`; */
 });
 
 // Export model

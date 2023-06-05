@@ -1,7 +1,7 @@
 const Bike = require("../models/bike");
 const Category = require("../models/category");
 const asyncHandler = require("express-async-handler");
-const { body, validationResult } = require("express-validator");
+const { body, query, validationResult } = require("express-validator");
 
 // Display list of all bikes.
 exports.bike_list = asyncHandler(async (req, res, next) => {
@@ -33,10 +33,13 @@ exports.bike_detail = asyncHandler(async (req, res, next) => {
 // Display BookInstance create form on GET.
 exports.bike_create_get = asyncHandler(async (req, res, next) => {
   const allCategories = await Category.find({}, "name").exec();
+  const category = await Category.findById(req.query.category, "name").exec();
+
+  console.log(`the category content is ${category.name}`);
 
   res.render("bike_form", {
     title: "Create Bike",
-    category_list: allCategories,
+    category: category,
     selected_category: undefined,
     bike: undefined,
     errors: undefined,
@@ -45,7 +48,7 @@ exports.bike_create_get = asyncHandler(async (req, res, next) => {
 
 // Handle BookInstance create on POST.
 exports.bike_create_post = [
-  // Validate and sanitize fields.
+  // Validate body and sanitize fields.
   body("name", "Name must be specified").trim().isLength({ min: 1 }).escape(),
   body("description", "Description must be specified")
     .trim()
@@ -58,15 +61,19 @@ exports.bike_create_post = [
     .trim()
     .isLength({ min: 1 })
     .escape(),
-  body("category", "Category must be specified")
-    .trim()
-    .isLength({ min: 1 })
-    .escape(),
+
+  //validate and sanitize query
+  query("category").trim().isLength({ min: 1 }).escape(),
   // Process request after validation and sanitization.
   asyncHandler(async (req, res, next) => {
     // Extract the validation errors from a request.
+
     const errors = validationResult(req);
 
+    const selectedCategory = await Category.findById(
+      req.query.category,
+      "name"
+    );
     // Create a BookInstance object with escaped and trimmed data.
     const bike = new Bike({
       name: req.body.name,
@@ -74,7 +81,7 @@ exports.bike_create_post = [
       number_in_stock: req.body.stock,
       price: req.body.price,
 
-      category: req.body.category,
+      category: selectedCategory,
       img_url: req.body.img_url,
     });
 
@@ -85,8 +92,9 @@ exports.bike_create_post = [
 
       res.render("bike_form", {
         title: "Create Bike",
-        category_list: allCategories,
-        selected_category: bike.category?._id,
+        category: undefined,
+
+        selected_category: selectedCategory,
         errors: errors.array(),
         bike: bike,
       });

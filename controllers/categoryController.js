@@ -4,22 +4,12 @@ const Bike = require("../models/bike");
 
 const { body, validationResult } = require("express-validator");
 
-exports.index = asyncHandler(async (req, res, next) => {
-  // Get details of books, book instances, authors and genre counts (in parallel)
-  const allCategories = await Category.find().sort({ name: 1 }).exec();
-
-  res.render("index", {
-    title: "Bike  Home",
-    categories: allCategories,
-  });
-});
-
 // Display list of all Categories.
 exports.category_list = asyncHandler(async (req, res, next) => {
   const allCategories = await Category.find().sort({ name: 1 }).exec();
-  res.render("author_list", {
+  res.render("category_list", {
     title: "Author List",
-    author_list: allCategories,
+    category_list: allCategories,
   });
 });
 
@@ -48,34 +38,31 @@ exports.category_detail = asyncHandler(async (req, res, next) => {
 
 // Display Author create form on GET.
 exports.category_create_get = (req, res, next) => {
-  res.render("author_form", { title: "Create Author" });
+  res.render("category_form", {
+    title: "Create Category",
+    category: undefined,
+    errors: undefined,
+  });
 };
 
 // Handle Author create on POST.
 exports.category_create_post = [
   // Validate and sanitize fields.
-  body("first_name")
+  body("name")
     .trim()
     .isLength({ min: 1 })
     .escape()
-    .withMessage("First name must be specified.")
-    .isAlphanumeric()
-    .withMessage("First name has non-alphanumeric characters."),
-  body("family_name")
+    .withMessage("Name must be specified."),
+  body("description")
     .trim()
     .isLength({ min: 1 })
     .escape()
-    .withMessage("Family name must be specified.")
-    .isAlphanumeric()
-    .withMessage("Family name has non-alphanumeric characters."),
-  body("date_of_birth", "Invalid date of birth")
-    .optional({ values: "falsy" })
-    .isISO8601()
-    .toDate(),
-  body("date_of_death", "Invalid date of death")
-    .optional({ values: "falsy" })
-    .isISO8601()
-    .toDate(),
+    .withMessage("Description must be specified."),
+  body("img_url")
+    .trim()
+    .isLength({ min: 1 })
+    .escape()
+    .withMessage("Image url must be specified."),
 
   // Process request after validation and sanitization.
   asyncHandler(async (req, res, next) => {
@@ -83,28 +70,27 @@ exports.category_create_post = [
     const errors = validationResult(req);
 
     // Create Author object with escaped and trimmed data
-    const author = new Author({
-      first_name: req.body.first_name,
-      family_name: req.body.family_name,
-      date_of_birth: req.body.date_of_birth,
-      date_of_death: req.body.date_of_death,
+    const category = new Category({
+      name: req.body.name,
+      description: req.body.description,
+      img_url: req.body.img_url,
     });
 
     if (!errors.isEmpty()) {
       // There are errors. Render form again with sanitized values/errors messages.
-      res.render("author_form", {
-        title: "Create Author",
-        author: author,
+      res.render("category_form", {
+        title: "Create Category",
+        category: category,
         errors: errors.array(),
       });
       return;
     } else {
       // Data from form is valid.
 
-      // Save author.
-      await author.save();
-      // Redirect to new author record.
-      res.redirect(author.url);
+      // Save category.
+      await category.save();
+      // Redirect to new category record.
+      res.redirect(category.url);
     }
   }),
 ];

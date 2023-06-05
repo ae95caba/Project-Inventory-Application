@@ -11,5 +11,9 @@
     <p>This is the <%= bike.name %> bike</p>
     <p><%= bike.description %></p>
     <img src="<%= bike.img_url %>" />
+    <p>There is <%=bike.number_in_stock %> in stock</p>
+    <p>Each cost $<%=bike.price %></p>
+    <a href="/bike/<%=bike._id%>/delete"><button>Delete bike</button></a>
+    <a href="/bike//update"><button>Update bike</button></a>
   </body>
 </html>

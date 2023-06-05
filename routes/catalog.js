@@ -8,7 +8,6 @@ const category_controller = require("../controllers/categoryController");
 /// bike ROUTES ///
 
 // GET catalog home page.
-router.get("/", category_controller.index);
 
 // GET request for creating a bike. NOTE This must come before routes that display bike (uses id).
 router.get("/bike/create", bike_controller.bike_create_get);
@@ -36,6 +35,9 @@ router.get("/bikes", bike_controller.bike_list);
 
 /// AUTHOR ROUTES ///
 
+// GET request for list of all categorys.
+router.get("/", category_controller.category_list);
+
 // GET request for creating category. NOTE This must come before route for id (i.e. display category).
 router.get("/category/create", category_controller.category_create_get);
 
@@ -56,8 +58,5 @@ router.post("/category/:id/update", category_controller.category_update_post);
 
 // GET request for one category.
 router.get("/category/:id", category_controller.category_detail);
-
-// GET request for list of all categorys.
-router.get("/categories", category_controller.category_list);
 
 module.exports = router;

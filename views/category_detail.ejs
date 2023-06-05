@@ -13,9 +13,18 @@
     <img src="<%= category.img_url %>" />
     <ul>
       <% category_bikes.forEach(function(bike) { %>
-      <li><a href="<%= bike.url %>"><%= bike.name %></a></li>
+      <li>
+        <a href="<%= bike.url %>"><%= bike.name %></a>
+      </li>
       <% }); %>
+      <li>
+        <a href="/bike/create?category=<%=category._id %>"
+          ><button>Add bike</button></a
+        >
+      </li>
     </ul>
-    <a href="/bike/create"><button>Add bike</button></a>
+
+    <a href="/<%= category.url %>/delete"><button>Delete category</button></a>
+    <a href="/<%= category.url %>/update"><button>Update category</button></a>
   </body>
 </html>

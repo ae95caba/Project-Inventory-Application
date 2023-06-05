@@ -7,31 +7,20 @@
     <title>Document</title>
   </head>
   <body>
-    <p><%= title%> in <%= category?.name %> category</p>
+    <p><%= title%></p>
     <form method="post">
-      <input placeholder="name" name="name" value="<%= bike?.name %>" />
+      <input placeholder="name" name="name" value="<%= category?.name %>" />
 
       <input
         placeholder="descriotion"
         name="description"
-        value="<%= bike?.description %>"
+        value="<%= category?.description %>"
       />
-      <input
-        type="number"
-        placeholder="price"
-        name="price"
-        value="<%= bike?.price  %>"
-      />
-      <input
-        type="number"
-        placeholder="stock"
-        name="stock"
-        value="<%= bike?.number_in_stock %>"
-      />
+
       <input
         placeholder="image url"
         name="img_url"
-        value="<%= bike?.img_url %>"
+        value="<%= category?.img_url %>"
       />
       <button type="submit">Confirm</button>
     </form>
