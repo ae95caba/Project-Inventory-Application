@@ -118,17 +118,17 @@ exports.category_delete_get = asyncHandler(async (req, res, next) => {
 // Handle Author delete on POST.
 exports.category_delete_post = asyncHandler(async (req, res, next) => {
   // Get details of author and all their books (in parallel)
-  const [author, allBooksByAuthor] = await Promise.all([
-    Author.findById(req.params.id).exec(),
-    Book.find({ author: req.params.id }, "title summary").exec(),
+  const [bike, allBikesInCategory] = await Promise.all([
+    Category.findById(req.params.id).exec(),
+    Bike.find({ category: req.params.id }, "name details").exec(),
   ]);
 
-  if (allBooksByAuthor.length > 0) {
+  if (allBikesInCategory.length > 0) {
     // Author has books. Render in same way as for GET route.
     res.render("author_delete", {
-      title: "Delete Author",
-      author: author,
-      author_books: allBooksByAuthor,
+      title: "Delete Category",
+      category: category,
+      category_bikes: allBikesInCategory,
     });
     return;
   } else {
@@ -137,9 +137,9 @@ exports.category_delete_post = asyncHandler(async (req, res, next) => {
     //both ways are valid
 
     console.log(`el id es :${req.params.id}`);
-    await Author.findByIdAndRemove(req.params.id);
+    await Category.findByIdAndRemove(req.params.id);
 
-    res.redirect("/catalog/authors");
+    res.redirect("/");
   }
 });
 
