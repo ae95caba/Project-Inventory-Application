@@ -32,7 +32,6 @@ exports.bike_detail = asyncHandler(async (req, res, next) => {
 
 // Display BookInstance create form on GET.
 exports.bike_create_get = asyncHandler(async (req, res, next) => {
-  const allCategories = await Category.find({}, "name").exec();
   const category = await Category.findById(req.query.category, "name").exec();
 
   res.render("bike_form", {
